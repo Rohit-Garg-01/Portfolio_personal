@@ -3,7 +3,28 @@
    Rohit Garg — Creative Designer Portfolio
    ============================================ */
 
+// Replace the empty string with the hosted folder URL before deploying to Vercel.
+window.PORTFOLIO_VIDEO_BASE_URL = '';
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    // ---- Hosted video support ----
+    // Keep this empty for local development. On Vercel, set it to the folder
+    // containing the uploaded videos, for example:
+    // window.PORTFOLIO_VIDEO_BASE_URL = 'https://cdn.example.com/rohit/videos';
+    const videoBaseUrl = (window.PORTFOLIO_VIDEO_BASE_URL || '').replace(/\/+$/, '');
+    document.querySelectorAll('.video__thumbnail video').forEach(video => {
+        const localSource = video.getAttribute('src');
+        const hostedSource = video.dataset.videoSrc || (
+            videoBaseUrl && localSource
+                ? `${videoBaseUrl}/${encodeURIComponent(localSource.split('/').pop())}`
+                : ''
+        );
+
+        if (hostedSource) video.src = hostedSource;
+        video.muted = true;
+        video.playsInline = true;
+    });
 
     // ---- Loader ----
     const loader = document.getElementById('loader');
